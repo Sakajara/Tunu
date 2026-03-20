@@ -1,44 +1,607 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Cool Website</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Nexus | Web3 Modern Interface</title>
+  <!-- Google Fonts for crisp modern typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (free icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000000;   /* pure black background */
+      font-family: 'Inter', sans-serif;
+      color: #ffffff;
+      line-height: 1.4;
+      overflow-x: hidden;
+    }
+
+    /* custom scrollbar - sleek */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 6px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #777;
+    }
+
+    /* main layout container: split into two columns (left content, right image) */
+    .web3-container {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+      flex-direction: row;
+    }
+
+    /* LEFT SIDE — text & Web3 content */
+    .content-left {
+      flex: 1;
+      padding: 3rem 4rem 3rem 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #000000;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* subtle gradient accent line (modern) */
+    .content-left::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0) 80%);
+      pointer-events: none;
+    }
+
+    /* RIGHT SIDE — image block (full bleed) */
+    .image-right {
+      flex: 1.1;
+      position: relative;
+      background-color: #0a0a0a;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-right img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      filter: grayscale(100%) contrast(1.05) brightness(0.95);
+    }
+
+    .image-right:hover img {
+      transform: scale(1.02);
+    }
+
+    /* overlay minimal geometric pattern for edge */
+    .image-right::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(125deg, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.02) 100%);
+      pointer-events: none;
+    }
+
+    /* logo / brand */
+    .brand {
+      margin-bottom: 1.5rem;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(120deg, #ffffff, #aaaaaa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(2px);
+      border: 0.5px solid rgba(255,255,255,0.2);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-top: 0.75rem;
+      letter-spacing: 0.3px;
+    }
+
+    .badge i {
+      font-size: 0.7rem;
+      color: #ddd;
+    }
+
+    /* main heading */
+    h1 {
+      font-size: 4.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 1rem 0 1.2rem 0;
+      letter-spacing: -0.02em;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #FFFFFF 30%, #9e9e9e 80%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: #cccccc;
+      max-width: 90%;
+      margin-bottom: 2rem;
+      font-weight: 400;
+      border-left: 2px solid rgba(255,255,255,0.3);
+      padding-left: 1.2rem;
+    }
+
+    /* metrics / web3 stats row */
+    .stats-row {
+      display: flex;
+      gap: 2rem;
+      margin: 2rem 0 2.2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: white;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+      color: #a0a0a0;
+    }
+
+    /* CTA group */
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-primary {
+      background: white;
+      color: black;
+      border: none;
+      padding: 0.9rem 2rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.2px;
+    }
+
+    .btn-primary:hover {
+      background: #e0e0e0;
+      transform: scale(0.97);
+      box-shadow: 0 10px 20px -8px rgba(255,255,255,0.1);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      padding: 0.9rem 2rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-outline:hover {
+      border-color: white;
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-2px);
+    }
+
+    /* web3 feature chips */
+    .tech-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .chip {
+      background: rgba(255,255,255,0.05);
+      border-radius: 40px;
+      padding: 0.4rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #ccc;
+      border: 0.5px solid rgba(255,255,255,0.15);
+      transition: all 0.2s;
+    }
+
+    .chip i {
+      margin-right: 6px;
+      font-size: 0.65rem;
+    }
+
+    /* wallet connect mock section (modern web3 vibe) */
+    .wallet-mock {
+      margin-top: 2rem;
+      background: rgba(255,255,255,0.02);
+      border-radius: 28px;
+      padding: 0.2rem 0.2rem 0.2rem 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      backdrop-filter: blur(8px);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      width: fit-content;
+    }
+
+    .address-preview {
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #bbbbbb;
+      letter-spacing: 0.3px;
+    }
+
+    .connect-btn {
+      background: #1a1a1a;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      border-radius: 40px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .connect-btn:hover {
+      background: #2c2c2c;
+    }
+
+    /* responsive design */
+    @media (max-width: 1024px) {
+      .content-left {
+        padding: 2.5rem;
+      }
+      h1 {
+        font-size: 3rem;
+      }
+      .description {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .web3-container {
+        flex-direction: column;
+      }
+      .image-right {
+        min-height: 380px;
+        order: 2;
+        flex: auto;
+      }
+      .content-left {
+        order: 1;
+        padding: 2.5rem 1.8rem;
+        text-align: left;
+      }
+      .stats-row {
+        justify-content: flex-start;
+      }
+      .wallet-mock {
+        width: 100%;
+        justify-content: space-between;
+      }
+      h1 {
+        font-size: 2.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .btn-primary, .btn-outline {
+        padding: 0.7rem 1.4rem;
+        font-size: 0.8rem;
+      }
+      h1 {
+        font-size: 2.2rem;
+      }
+      .stat-number {
+        font-size: 1.4rem;
+      }
+    }
+
+    /* subtle animation for initial load */
+    @keyframes fadeSlideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .content-left > * {
+      animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+      opacity: 0;
+    }
+
+    .content-left .brand { animation-delay: 0s; }
+    .content-left h1 { animation-delay: 0.1s; }
+    .content-left .description { animation-delay: 0.2s; }
+    .content-left .stats-row { animation-delay: 0.3s; }
+    .content-left .cta-group { animation-delay: 0.4s; }
+    .content-left .tech-chips { animation-delay: 0.5s; }
+    .content-left .wallet-mock { animation-delay: 0.6s; }
+
+    /* right side image subtle fade in */
+    .image-right {
+      animation: fadeIn 0.9s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
 </head>
 <body>
+<div class="web3-container">
+  <!-- LEFT SIDE: Modern Web3 content -->
+  <div class="content-left">
+    <div class="brand">
+      <span class="logo">◈ NEXUS PROTOCOL</span>
+      <div class="badge">
+        <i class="fas fa-circle-nodes"></i> Web3-native · Decentralized
+      </div>
+    </div>
 
-    <header>
-        <h1>Welcome to My Website</h1>
-        <p>Simple. Clean. Beautiful.</p>
-    </header>
+    <h1>
+      Own the <span class="gradient-text">future</span><br>
+      of digital assets.
+    </h1>
 
-    <section class="hero">
-        <h2>Hello 👋</h2>
-        <p>This is my first website hosted on GitHub!</p>
-        <button>Learn More</button>
-    </section>
+    <div class="description">
+      Seamless cross-chain infrastructure, zero-knowledge proofs, and next-gen smart contracts.
+      Enter the new era of permissionless innovation.
+    </div>
 
-    <section class="cards">
-        <div class="card">
-            <h3>About Me</h3>
-            <p>I build cool things with code.</p>
-        </div>
+    <!-- stats: modern web3 metrics -->
+    <div class="stats-row">
+      <div class="stat-item">
+        <span class="stat-number">$142M+</span>
+        <span class="stat-label">Total Value Locked</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">87K+</span>
+        <span class="stat-label">Active Wallets</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">2.4s</span>
+        <span class="stat-label">Finality</span>
+      </div>
+    </div>
 
-        <div class="card">
-            <h3>Projects</h3>
-            <p>Check out what I’ve been working on.</p>
-        </div>
+    <!-- Call to actions -->
+    <div class="cta-group">
+      <button class="btn-primary" id="launchAppBtn">
+        <i class="fas fa-rocket"></i> Launch dApp
+      </button>
+      <button class="btn-outline" id="learnMoreBtn">
+        <i class="fas fa-globe"></i> Whitepaper
+      </button>
+    </div>
 
-        <div class="card">
-            <h3>Contact</h3>
-            <p>Let’s connect!</p>
-        </div>
-    </section>
+    <!-- Tech / web3 chips -->
+    <div class="tech-chips">
+      <span class="chip"><i class="fab fa-ethereum"></i> EVM Compatible</span>
+      <span class="chip"><i class="fas fa-shield-alt"></i> zk-Rollups</span>
+      <span class="chip"><i class="fas fa-link"></i> Cross-chain Bridge</span>
+      <span class="chip"><i class="fas fa-key"></i> MPC Wallets</span>
+    </div>
 
-    <footer>
-        <p>© 2026 My Website</p>
-    </footer>
+    <!-- Interactive wallet mock (shows web3 interaction) -->
+    <div class="wallet-mock" id="walletMock">
+      <div class="address-preview" id="walletAddressDisplay">
+        <i class="fas fa-wallet"></i> 0x71C...3F2a
+      </div>
+      <button class="connect-btn" id="mockConnectBtn">
+        <i class="fas fa-plug"></i> Connect Wallet
+      </button>
+    </div>
+  </div>
 
+  <!-- RIGHT SIDE: abstract modern image (black/white theme, high quality) -->
+  <div class="image-right">
+    <!-- 
+      Using a striking, futuristic abstract 3D render that fits black & white aesthetic.
+      This image represents Web3 / blockchain / digital architecture in monochrome style.
+      Source: placeholder image from unsplash (but we embed via base64-like reliable external? 
+      Actually I'll use a high-res unsplash abstract from images.unsplash.com that's black/white and modern.
+      Ensures right side is captivating.
+    -->
+    <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1200&auto=format" 
+         alt="Web3 abstract geometric digital art" 
+         onerror="this.src='https://images.unsplash.com/photo-1614850715649-1d0106293bd1?w=1200&auto=format'; this.onerror='';">
+  </div>
+</div>
+
+<script>
+  // Modern interactive demo: simulate wallet connection, button alerts and dynamic updates
+  (function() {
+    // DOM elements
+    const connectBtn = document.getElementById('mockConnectBtn');
+    const walletDisplay = document.getElementById('walletAddressDisplay');
+    const launchBtn = document.getElementById('launchAppBtn');
+    const whitepaperBtn = document.getElementById('learnMoreBtn');
+
+    // wallet states (mock)
+    let isConnected = false;
+    let mockAddress = '0x71C...3F2a';
+    const fullMockAddress = '0x71C3a7b9Ef2c8D4F5aBc9Ef1234567890aBcDeF';
+    const truncatedConnected = '0x71C3...eF89';
+    const truncatedDisconnected = '0x71C...3F2a';
+
+    // Helper to update wallet UI
+    function updateWalletUI() {
+      if (isConnected) {
+        walletDisplay.innerHTML = `<i class="fas fa-circle-check" style="color:#a0ffa0;"></i> ${truncatedConnected}`;
+        connectBtn.innerHTML = `<i class="fas fa-sign-out-alt"></i> Disconnect`;
+        // add a subtle style change
+        const walletMockDiv = document.getElementById('walletMock');
+        walletMockDiv.style.border = '0.5px solid rgba(255,255,255,0.3)';
+        walletMockDiv.style.backgroundColor = 'rgba(255,255,255,0.06)';
+      } else {
+        walletDisplay.innerHTML = `<i class="fas fa-wallet"></i> ${truncatedDisconnected}`;
+        connectBtn.innerHTML = `<i class="fas fa-plug"></i> Connect Wallet`;
+        const walletMockDiv = document.getElementById('walletMock');
+        walletMockDiv.style.border = '0.5px solid rgba(255,255,255,0.1)';
+        walletMockDiv.style.backgroundColor = 'rgba(255,255,255,0.02)';
+      }
+    }
+
+    // Connect / Disconnect simulation (Web3 mock)
+    function toggleWalletConnection() {
+      if (!isConnected) {
+        // Simulate connection request
+        isConnected = true;
+        updateWalletUI();
+        // optional small animation or log
+        const notification = document.createElement('div');
+        notification.innerText = '✓ Wallet connected (simulated)';
+        notification.style.position = 'fixed';
+        notification.style.bottom = '20px';
+        notification.style.right = '20px';
+        notification.style.background = '#1f1f1f';
+        notification.style.color = '#e0e0e0';
+        notification.style.padding = '8px 18px';
+        notification.style.borderRadius = '40px';
+        notification.style.fontSize = '0.8rem';
+        notification.style.fontWeight = '500';
+        notification.style.border = '1px solid #333';
+        notification.style.zIndex = '999';
+        notification.style.backdropFilter = 'blur(12px)';
+        document.body.appendChild(notification);
+        setTimeout(() => { notification.style.opacity = '0'; setTimeout(() => notification.remove(), 500); }, 2000);
+      } else {
+        isConnected = false;
+        updateWalletUI();
+        const notification = document.createElement('div');
+        notification.innerText = '🔌 Wallet disconnected';
+        notification.style.position = 'fixed';
+        notification.style.bottom = '20px';
+        notification.style.right = '20px';
+        notification.style.background = '#1a1a1a';
+        notification.style.color = '#cccccc';
+        notification.style.padding = '8px 18px';
+        notification.style.borderRadius = '40px';
+        notification.style.fontSize = '0.8rem';
+        notification.style.border = '1px solid #2c2c2c';
+        notification.style.zIndex = '999';
+        document.body.appendChild(notification);
+        setTimeout(() => { notification.style.opacity = '0'; setTimeout(() => notification.remove(), 500); }, 2000);
+      }
+    }
+
+    // Launch dApp simulation
+    function launchDapp() {
+      if (isConnected) {
+        alert('🚀 Launching Nexus dApp interface...\n(Web3 dashboard would open with portfolio & staking)');
+      } else {
+        alert('⚡ Please connect your wallet first to access the dApp dashboard.\nClick "Connect Wallet" to simulate Web3 login.');
+      }
+    }
+
+    function openWhitepaper() {
+      alert('📄 Nexus Whitepaper v3.0\nScalable zkEVM, Decentralized Governance, and Modular Data Availability.\nFull document available soon.');
+    }
+
+    // event binding
+    if (connectBtn) {
+      connectBtn.addEventListener('click', toggleWalletConnection);
+    }
+    if (launchBtn) {
+      launchBtn.addEventListener('click', launchDapp);
+    }
+    if (whitepaperBtn) {
+      whitepaperBtn.addEventListener('click', openWhitepaper);
+    }
+
+    // Additional subtle interaction: show hover effect on stats? just for modern polish
+    const statItems = document.querySelectorAll('.stat-item');
+    statItems.forEach(stat => {
+      stat.addEventListener('mouseenter', () => {
+        stat.style.transform = 'translateY(-3px)';
+        stat.style.transition = 'transform 0.2s ease';
+      });
+      stat.addEventListener('mouseleave', () => {
+        stat.style.transform = 'translateY(0)';
+      });
+    });
+
+    // dynamic console greeting to emphasize web3 ready
+    console.log('🌐 Nexus Web3 Interface | Black & White Theme | Right Image Loaded');
+  })();
+</script>
 </body>
 </html>
